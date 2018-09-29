@@ -28,14 +28,12 @@ layout = [
         sg.Frame(
             "案件信息",
             [
-                [sg.Text("单号:", size=(9, 1)), sg.Input("id", key="id")],
-                [sg.Text("联系时间:", size=(9, 1)), sg.Input("", key="first")],
+                [sg.Text("单号:", size=(9, 1)), sg.Input("", key="case_id")],
                 [
-                    sg.Text("", size=(9, 1)),
-                    sg.Input("", key="second"),
+                    sg.Text("联系时间:", size=(9, 1)),
+                    sg.Input("", key="first"),
                     sg.ReadButton("现在"),
                 ],
-                [sg.Text("", size=(9, 1)), sg.Input("", key="third")],
             ],
         )
     ],
@@ -63,7 +61,7 @@ layout = [
             "所属小队",
             [
                 [
-                    sg.Radio(TEAM[i], "type", default=False, size=(10, 1), key=TEAM[i])
+                    sg.Radio(TEAM[i], "team", default=False, size=(10, 1), key=TEAM[i])
                     for i in range(4 * x, 4 * x + 4)
                     if i < len(TEAM)
                 ]
@@ -73,8 +71,6 @@ layout = [
     ],
     [sg.ReadButton("提交")],
 ]
-
-window = sg.Window("投诉登记").Layout(layout)
 
 
 def write_into_cvs(data):
@@ -105,11 +101,9 @@ def write_into_cvs(data):
             )
 
 
-def get_data(values):
-    case_id = values.get("id")
+def get_data():
+    case_id = values.get("case_id")
     contract_time1 = values.get("first")
-    contract_time2 = values.get("second")
-    contract_time3 = values.get("third")
     _tmp_d = {k: v for k, v in values.items() if v is True}
     for k in _tmp_d:
         if k in CASE_TYPE:
@@ -119,37 +113,38 @@ def get_data(values):
     return {
         "case_id": case_id,
         "contract_time1": contract_time1,
-        "contract_time2": contract_time2,
-        "contract_time3": contract_time3,
         "case_type": case_type,
         "team": team,
     }
 
 
 def set_now():
-    now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+    now = datetime.datetime.now().strftime("%F %H:%M")
     if not values["first"]:
         window.FindElement("first").Update(now)
-    elif not values["second"]:
-        window.FindElement("second").Update(now)
     else:
-        window.FindElement("third").Update(now)
+        now = values["first"] + " " + now
+        window.FindElement("first").Update(now)
+    window.FindElement("case_id").Update(values["case_id"])
 
 
-while 1:
-    button, values = window.ReadNonBlocking()
+window = sg.Window("投诉登记").Layout(layout)
 
+while True:
+    button, values = window.Read()
+    print(button, values)
+    if button is None:
+        break
     if button == "现在":
         set_now()
     elif button == "提交":
-        data = get_data(values)
+        data = get_data()
         if not data.get("case_id"):
-            sg.PopupError("ID为必填项")
-        if any(
-            [data["contract_time1"], data["contract_time2"], data["contract_time3"]]
-        ):
-            pass
-        else:
-            sg.PopupError("联系时间至少填写一个!")
+            sg.Popup("ID为必填项", non_blocking=True)
+            continue
+        if not data["contract_time1"]:
+            sg.Popup("联系时间至少填写一个!", non_blocking=True)
+            window.FindElement("case_id").Update(values["case_id"])
+            continue
         write_into_cvs(data)
-        sg.PopupOK("提交成功!")
+        sg.PopupOK("提交成功!", non_blocking=True)
