@@ -46,7 +46,7 @@ layout = [
                         CASE_TYPE[i],
                         "type",
                         default=False,
-                        size=(10, 1),
+                        size=(12, 1),
                         key=CASE_TYPE[i],
                     )
                     for i in range(4 * x, 4 * x + 4)
