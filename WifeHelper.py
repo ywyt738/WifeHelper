@@ -1,10 +1,23 @@
-import datetime
-import pathlib
-import math
 import csv
+import datetime
+import logging
+import math
+import pathlib
 
 import PySimpleGUI as sg
+import sentry_sdk
 
+sentry_sdk.init("https://23d1c3732bd540b29ccc56ba6306e97a@sentry.io/1300892")
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s [%(levelname)s][行号:%(lineno)d] %(message)s",
+    datefmt="%Y/%m/%d %H:%M:%S",
+    filename="WifeHelper.log",
+    filemode="a",
+)
+
+VERSION = "1.0"
 FILENAME = pathlib.Path("接单.csv")
 CASE_TYPE = [
     "乱设摊",
@@ -128,15 +141,16 @@ def set_now():
     window.FindElement("case_id").Update(values["case_id"])
 
 
-window = sg.Window("投诉登记").Layout(layout)
+window = sg.Window("投诉登记 " + VERSION).Layout(layout)
 
 while True:
     button, values = window.Read()
-    print(button, values)
+    logging.debug("ACTION:%s\nVALUES:%s", button, values)
     if button is None:
         break
     if button == "现在":
         set_now()
+        1/0
     elif button == "提交":
         data = get_data()
         if not data.get("case_id"):
