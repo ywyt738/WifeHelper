@@ -150,7 +150,6 @@ while True:
         break
     if button == "现在":
         set_now()
-        1/0
     elif button == "提交":
         data = get_data()
         if not data.get("case_id"):
