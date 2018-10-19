@@ -1,2 +1,2 @@
-PySimpleGUI==3.8.4
+PySimpleGUI==3.9.4
 sentry_sdk==0.3.9
