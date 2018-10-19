@@ -1,7 +1,10 @@
 language: python
 python:
   - "3.6"
-os: windows
+os:
+  - linux
+  - osx
+  - windows
 install:
   - pip install -r requirements.txt
   - pip install pyinstaller
