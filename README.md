@@ -1,6 +1,6 @@
 # WifeHelper
 
-[![Build Status](https://travis-ci.com/ywyt738/WifeHelper.svg?branch=master)](https://travis-ci.com/ywyt738/WifeHelper)
+[![Build Status](https://travis-ci.com/ywyt738/WifeHelper.svg?branch=master)](https://travis-ci.com/ywyt738/WifeHelper) [![Build Status](https://omegaphi.visualstudio.com/WifeHelper/_apis/build/status/WifeHelper-CI)](https://omegaphi.visualstudio.com/WifeHelper/_build/latest?definitionId=2)
 
 接个单子
 
