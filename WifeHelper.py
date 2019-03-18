@@ -27,7 +27,7 @@ CASE_TYPE = [
     "夜间施工",
     "占绿毁绿",
     "广告设施",
-    "油烟",
+    "环保",
     "出租车类",
     "非法客运类",
     "其他类别",
@@ -159,5 +159,9 @@ while True:
             sg.Popup("联系时间至少填写一个!", non_blocking=True)
             window.FindElement("case_id").Update(values["case_id"])
             continue
-        write_into_cvs(data)
-        sg.PopupOK("提交成功!", non_blocking=True)
+        try:
+            write_into_cvs(data)
+        except PermissionError as e:
+            sg.PopupError('请关闭"接单.csv"!', non_blocking=True)
+        else:
+            sg.PopupOK("提交成功!", non_blocking=True)
